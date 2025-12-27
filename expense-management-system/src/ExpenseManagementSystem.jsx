@@ -8,22 +8,48 @@ const ExpenseManagementSystem = () => {
   const [expenseData, setExpensedata] = useState([]);
 
   const hendleSubmit = () => {
-amount > 0 ?  setExpensedata([...expenseData, 
-  { name, amount, category, date }
-  ]) : alert("Please Enter Your Expense")
-   
+    amount > 0 ? setExpensedata([...expenseData, 
+      { name, amount, category, date }
+    ]) : alert("Please Enter Your Expense")
   }
 
-const hendleDelete = (index)=>{
-const deletedata = window.confirm("are sure you delete the your expenese")
-const newexpenseData = expenseData.filter((item, idx) => idx !== index)
+  const hendleDelete = (index) => {
+    const deletedata = window.confirm("are sure you delete your expenese")
+    if(deletedata){
+      const removeData = expenseData.filter((items, idx) => idx !== index)
+      setExpensedata(removeData)
+    }
+  }
 
+  const hendleEdit = (index) => {
+    const newExpenseData = expenseData[index]
+    const newName = prompt("Edit your expense name", newExpenseData.name)
+    const newAmount = prompt("Edit your expense amount", newExpenseData.amount)
+    const newCategory = prompt("Edit your expense category", newExpenseData.category)
+    const newDate = prompt("Edit your expense date", newExpenseData.date)
 
-setExpensedata(newexpenseData)
+    const updateData = [...expenseData]
+    updateData.splice(index, 1, {
+      name: newName,
+      amount: newAmount,
+      category: newCategory,
+      date: newDate,
+    })
+    setExpensedata(updateData);
+  }
 
-}
+  // Totelexpense Fnctionlety
+  const Totelexpense = expenseData.reduce((acc, crr) => acc + +crr.amount, 0)
 
-
+  // Categorys Functionlety (exactly tumhara logic)
+  const foodTotel = expenseData.filter(val => val.category === "Food")
+    .reduce((acc, foodCrr) => acc + +foodCrr.amount, 0)
+  const travelTotel = expenseData.filter(val => val.category === "Travel")
+    .reduce((acc, travelCrr) => acc + +travelCrr.amount, 0)
+  const shoppingTotel = expenseData.filter(val => val.category === "Shopping")
+    .reduce((acc, shoppingCrr) => acc + +shoppingCrr.amount, 0)
+  const billsTotel = expenseData.filter(val => val.category === "Bills")
+    .reduce((acc, billsCrr) => acc + +billsCrr.amount, 0)
 
   return (
     <>
@@ -48,7 +74,7 @@ setExpensedata(newexpenseData)
           >
             <input
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(event) => setName(event.target.value)}
               type="text"
               placeholder="Expense Name"
               className="border-2 border-gray-200 rounded-xl p-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -56,7 +82,7 @@ setExpensedata(newexpenseData)
 
             <input
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={(event) => setAmount(event.target.value)}
               type="number"
               placeholder="Amount"
               className="border-2 border-gray-200 rounded-xl p-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -64,14 +90,14 @@ setExpensedata(newexpenseData)
 
             <input
               value={date}
-              onChange={(e) => setDate(e.target.value)}
+              onChange={(event) => setDate(event.target.value)}
               type="date"
               className="border-2 border-gray-200 rounded-xl p-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
 
             <select
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={(event) => setCategory(event.target.value)}
               className="border-2 border-gray-200 rounded-xl p-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               <option value="">Category</option>
@@ -96,27 +122,24 @@ setExpensedata(newexpenseData)
             Expense List
           </h2>
 
-          {expenseData.map((item, index) => {
-            return (
-            <div key={index}className="flex justify-between items-center bg-gray-50 p-4 rounded-xl border mb-4">
-      <div>
-      <h3 className="font-semibold text-gray-800">{item.name}</h3>
-      <p className="text-sm text-gray-500">{item.category} • {item.date}</p>
-      </div>
-      <div className="flex items-center gap-4">
-      <button onClick={() => hendleDelete(index)} className="bg-red-500 text-white px-4 py-2 rounded-xl hover:scale-105 transition">
-      Delete
-      </button>
-      <button className="bg-blue-500 text-white px-4 py-2 rounded-xl hover:scale-105 transition">
-       Edit
-      </button>
-      </div>
-       <div className="text-lg font-bold text-red-500">${item.amount}</div>
-       </div>
-            )
-          })}
+          {expenseData.map((item, index) => (
+            <div key={index} className="flex justify-between items-center bg-gray-50 p-4 rounded-xl border mb-4">
+              <div>
+                <h3 className="font-semibold text-gray-800">{item.name}</h3>
+                <p className="text-sm text-gray-500">{item.category} • {item.date}</p>
+              </div>
+              <div className="flex items-center gap-4">
+                <button onClick={() => hendleDelete(index)} className="bg-red-500 text-white px-4 py-2 rounded-xl hover:scale-105 transition">
+                  Delete
+                </button>
+                <button onClick={() => hendleEdit(index)} className="bg-blue-500 text-white px-4 py-2 rounded-xl hover:scale-105 transition">
+                  Edit
+                </button>
+              </div>
+              <div className="text-lg font-bold text-red-500">${item.amount}</div>
+            </div>
+          ))}
 
-          {/* Empty state */}
           {expenseData.length === 0 && (
             <div className="text-gray-400 text-center p-10 border-2 border-dashed border-gray-300 rounded-2xl bg-gray-50">
               No expenses added yet
@@ -124,13 +147,22 @@ setExpensedata(newexpenseData)
           )}
         </div>
 
-        {/* Total expense */}
+        {/* Section Category Totals , Total Section */}
         <div className="w-full max-w-2xl bg-white shadow-xl rounded-3xl p-6 md:p-8 mb-12 text-center border-t-4 border-green-500">
           <h2 className="text-2xl font-semibold text-gray-700 border-b pb-2 border-gray-200">
-            Total Expense
+            Total Expense by Category
+          </h2>
+          <div className="mt-4 flex justify-between text-lg font-bold text-green-600 mb-6">
+            <div>🍔 Food : $ {foodTotel}</div>
+            <div>✈️ Travel : $ {travelTotel}</div>
+            <div>🛍️ Shopping : $ {shoppingTotel}</div>
+            <div>🧾 Bills : $ {billsTotel}</div>
+          </div>
+          <h2 className="text-2xl font-semibold text-gray-700 border-t pt-2 mt-4">
+           Total Expense
           </h2>
           <p className="text-4xl font-extrabold text-green-600 mt-4">
-            💰 $0
+            🪙 $ {Totelexpense}
           </p>
         </div>
       </div>
