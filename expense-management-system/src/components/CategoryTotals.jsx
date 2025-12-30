@@ -1,21 +1,30 @@
 import React from 'react';
 
-const CategoryTotals = () => {
+const CategoryTotals = ({ transactions }) => {
+  const categories = ["Food", "Travel", "Shopping", "Bills"];
+  const bgColors = ["bg-green-100", "bg-blue-100", "bg-purple-100", "bg-yellow-100"];
+  const emojis = ["🍔", "✈️", "🛍️", "🧾"];
+
   return (
-   <>
     <div className="bg-white p-6 rounded-2xl shadow-lg">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">
-        📊 Category Totals
-      </h2>
+      <h2 className="text-2xl font-bold mb-4 text-gray-800">📊 Category Totals</h2>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-green-100 p-4 rounded-xl text-center font-bold">🍔 Food: $0</div>
-        <div className="bg-blue-100 p-4 rounded-xl text-center font-bold">✈️ Travel: $0</div>
-        <div className="bg-purple-100 p-4 rounded-xl text-center font-bold">🛍️ Shopping: $0</div>
-        <div className="bg-yellow-100 p-4 rounded-xl text-center font-bold">🧾 Bills: $0</div>
+        {categories.map((category, idx) => {
+          const filteredTransactions = transactions.filter(item => item.category.includes(category));
+          const total = filteredTransactions.reduce((sum, item) => sum + item.amount, 0);
+
+          return (
+            <div
+              key={idx}
+              className={`${bgColors[idx]} p-4 rounded-xl text-center font-bold`}
+            >
+              {emojis[idx]} {category}: ${total}
+            </div>
+          );
+        })}
       </div>
     </div>
-   </>
   );
 };
 
