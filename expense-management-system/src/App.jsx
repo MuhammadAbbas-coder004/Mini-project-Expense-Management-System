@@ -27,7 +27,29 @@ if (data.type === "CashIn") {
 }
 
 
+const hendleDelete = (index) => {
+  const removeExpense = transactions.filter((item, idx) => 
+    idx === index ? false : true
+  );
+  setTransactions(removeExpense);
+}
 
+const hendleEdit = (index) => {
+  const updateExpense = [...transactions]
+  const newName = prompt("Edit your expense name", transactions[index].name)
+  const newAmount = prompt("Edit your expense amount", transactions[index].amount)
+  const newCategory = prompt("Edit your expense category", transactions[index].category)
+  const newDate = prompt("Edit your expense date",transactions[index].date)
+  
+  updateExpense.splice(index, 1, {
+    name: newName,
+    amount: Number(newAmount),
+    category: newCategory,
+    date: newDate,
+  })
+  
+  setTransactions(updateExpense)
+}
 
 
   return (
@@ -43,9 +65,11 @@ if (data.type === "CashIn") {
 
       <div className="max-w-6xl mx-auto space-y-6">
         <Summary  cashIn={cashIn} cashOut={cashOut} balance={balance}/>
-        <ExpenseForm hendleTransction = {hendleTransction} />
+        <ExpenseForm hendleTransction = {hendleTransction} balance = {balance} />
         <SortUI />
-        <ExpenseList transactions = {transactions} />
+        <ExpenseList transactions = {transactions} hendleDelete = {hendleDelete}
+        hendleEdit = {hendleEdit}
+        />
         <CategoryTotals />
       </div>
     </div>
