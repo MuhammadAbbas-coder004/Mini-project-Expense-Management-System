@@ -1,12 +1,13 @@
 import React from 'react'
 
-const SortUI = () => {
+const SortUI = ({setSortby}) => {
   return (
     <>
 <div className="bg-white p-6 rounded-2xl shadow-lg flex items-center gap-4">
   <label className="font-semibold text-gray-700">Sort By:</label>
 
   <select
+  onChange={(event) => setSortby(event.target.value)}
     className="
       border p-2 rounded-lg bg-white
       transition-transform duration-300

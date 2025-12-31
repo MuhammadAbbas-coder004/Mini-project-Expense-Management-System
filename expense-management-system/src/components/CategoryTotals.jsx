@@ -1,9 +1,17 @@
 import React from 'react';
 
 const CategoryTotals = ({ transactions }) => {
-  const categories = ["Food", "Travel", "Shopping", "Bills"];
-  const bgColors = ["bg-green-100", "bg-blue-100", "bg-purple-100", "bg-yellow-100"];
-  const emojis = ["🍔", "✈️", "🛍️", "🧾"];
+  const categories = [
+    "Food", "Travel", "Shopping", "Bills",
+    "Entertainment", "Petrol", "Canteen", "Rent"
+  ];
+
+  const bgColors = [
+    "bg-green-100", "bg-blue-100", "bg-purple-100", "bg-yellow-100",
+    "bg-pink-100", "bg-indigo-100", "bg-orange-100", "bg-gray-100"
+  ];
+
+  const emojis = ["🍔", "✈️", "🛍️", "🧾", "🎬", "⛽", "🍽️", "🏠"];
 
   return (
     <div className="bg-white p-6 rounded-2xl shadow-lg">
@@ -11,7 +19,9 @@ const CategoryTotals = ({ transactions }) => {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {categories.map((category, idx) => {
-          const filteredTransactions = transactions.filter(item => item.category.includes(category));
+          const filteredTransactions = transactions.filter(item =>
+            item.category.includes(category)
+          );
           const total = filteredTransactions.reduce((sum, item) => sum + item.amount, 0);
 
           return (
